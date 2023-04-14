@@ -6,8 +6,8 @@ python-multipart
 sqlalchemy==1.4.*
 sqlite-regex
 passlib
-python-jose[cryptography]
 argon2_cffi
+python-jose[cryptography]
 aiohttp
 # httpx[cli]
 docopt
