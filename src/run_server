@@ -1,11 +1,8 @@
+#!/usr/bin/env python3
 import os
 
 def main():
-    args = parse_cmdline_args()
-    start_uvicorn(args)
-#:
-
-def parse_cmdline_args():
+    import uvicorn
     from docopt import docopt
     help_doc = """
 FastAPI Web server for the course management Web App.
@@ -26,12 +23,6 @@ Options:
     os.environ['CONFIG_LEVEL'] = args['--config-level']
     if args['--workers']:
         args['--workers'] = int(args['--workers'])
-    return args
-#:
-
-def start_uvicorn(cmdline_args: dict):
-    import uvicorn
-    args = cmdline_args
 
     uvicorn.run(
         'config_server:app',

@@ -1,0 +1,14 @@
+{
+	"folders": [
+        {
+            "path": ".."
+        }
+    ],
+    "settings": {
+        "liveServer.settings.ignoreFiles": ["**/*.db"],
+        "editor.fontSize": 18,
+        "files.exclude": {
+            "**/__pycache__": true
+        }
+    }
+}
