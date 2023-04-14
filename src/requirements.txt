@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+chameleon
+fastapi-chameleon
+python-multipart
+sqlalchemy==1.4.*
+sqlite-regex
+passlib
+python-jose[cryptography]
+argon2_cffi
+aiohttp
+# httpx[cli]
+docopt
+itsdangerous

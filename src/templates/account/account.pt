@@ -1,0 +1,94 @@
+<div metal:use-macro="load: ../shared/_layout.pt">
+
+    <__css_scripts__ metal:fill-slot="additional_css" tal:omit-tag="True">
+        <link rel="stylesheet" href="/static/assets/css/account.css">
+    </__css_scripts__>
+
+    <__content__ metal:fill-slot="content" tal:omit-tag="True">
+
+        <main id="main" class="account-main">
+            <section class="vh-100 bg-image">
+                <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+                    <div class="container h-100">
+                        <div class="row d-flex justify-content-center align-items-center h-100">
+                            <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                                <div class="card" style="border-radius: 15px;">
+                                    <div class="card-body p-5">
+                                        <h2 class="text-uppercase text-center mb-5">Alterar Dados da Conta</h2>
+
+                                        <form action="/account" method="POST" class="account-form">
+
+                                            <div class="form-outline mb-4">
+                                                <input type="text" name="name" class="form-control form-control-md" required
+                                                    disabled
+                                                    value="${name}">
+                                                <label class="form-label" for="name">O Seu Nome</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="email" name="email_addr" class="form-control form-control-md" required
+                                                    value="${email_addr}">
+                                                <label class="form-label" for="email_addr">Endereço de Email</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="text" name="address_line1" class="form-control form-control-md"
+                                                    value="${address_line1}" maxlength="${address_line_maxlength}">
+                                                <label class="form-label" for="address_line1">Linha de Endereço 1</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="text" name="address_line2" class="form-control form-control-md"
+                                                    value="${address_line2}" maxlength="${address_line_maxlength}">
+                                                <label class="form-label" for="address_line2">Linha de Endereço 2</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="text" name="zip_code" class="form-control form-control-md"
+                                                    value="${zip_code}" maxlength="${zip_code_maxlength}">
+                                                <label class="form-label" for="zip_code">Código Postal</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <select name="country_iso_code" class="form-control form-control-md">
+                                                    <option value="${selected_country_iso_code}" selected>${selected_country_name}</option>
+                                                    <__repeat__ tal:repeat="country other_countries" tal:omit-tag="True">
+                                                        <option value="${country.iso_code}">${country.name}</option>
+                                                    </__repeat__>
+                                                </select>
+                                                <label class="form-label" for="country">País</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="password" name="current_password" class="form-control form-control-md"
+                                                       required>
+                                                <label class="form-label" for="form3Example4cg">Senha Actual</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="password" name="new_password" class="form-control form-control-md">
+                                                <label class="form-label" for="form3Example4cg">Nova senha</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="password" id="repeat-password" class="form-control form-control-md">
+                                                <label class="form-label" for="repeat-password">Repita a nova senha</label>
+                                            </div>
+
+                                            <div tal:condition="error" class="d-flex justify-content-center form-outline mb-4 error-msg">${error_msg}</div>
+
+                                            <div class="d-flex justify-content-center">
+                                                <button type="submit"
+                                                    class="btn btn-success btn-block btn-lg get-started-btn text-body">Alterar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+          </main><!-- End #main -->
+    </__content__>
+</div>
