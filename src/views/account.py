@@ -398,7 +398,6 @@ class DecodedIDToken(BaseModel):
     email_addr: str
 #:
 
-
 @router.get(
     '/extlogin/start/{external_provider_id}',
     dependencies = (Depends(requires_unauthentication),)
@@ -484,6 +483,7 @@ async def external_login_response(
     From here on, this server will become a HTTPS client when talking
     to the OAuth2/OpenID Connect provider).
     """
+    print(f"[+] Request coming from {request.client}")
     external_provider_id = validate_state_token(state)
 
     async with aiohttp.ClientSession() as http_session:
@@ -495,11 +495,8 @@ async def external_login_response(
         )
 
     if student_id := authenticate_student(decoded_id_token):
-        return exec_login(student_id)  
-    register_url = f"/account/register"
-    get_session()['email_addr'] = decoded_id_token.email_addr
-    get_session()['name'] = ''
-    return responses.RedirectResponse(url = register_url)
+        return exec_login(student_id)
+    return register_after_external_authentication(decoded_id_token)
 #:
 
 def validate_state_token(state: str) -> int:
@@ -605,6 +602,8 @@ async def decode_and_validate_id_token(
     https://developers.google.com/identity/openid-connect/openid-connect#validatinganidtoken
     """
 
+    # TODO: Validar expires_in
+
     # Get public key from jwks uri
     async with http_session.get(GOOGLE_JWKS_URI) as resp:
         # Gives the set of jwks keys.the keys has to be passed as it is 
@@ -669,6 +668,14 @@ def authenticate_student(id_token: DecodedIDToken) -> int | None:
             add = sserv.add_student_external_login
             add(user, id_token.provider_id, id_token.external_id)
     return student_id
+#:
+
+def register_after_external_authentication(decoded_id_token: DecodedIDToken):
+    register_url = f"/account/register"
+    session = get_session()
+    session['email_addr'] = decoded_id_token.email_addr
+    session['name'] = ''
+    return responses.RedirectResponse(url = register_url)
 #:
 
 # async def get_discovery_document(client: aiohttp.ClientSession) -> dict:
