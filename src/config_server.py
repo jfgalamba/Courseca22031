@@ -27,6 +27,7 @@ from views import (
     home,
     courses,
     account,
+    extlogin,
 )
 from data.database import (
     db_init,
@@ -104,7 +105,7 @@ def config_exception_handlers(app: FastAPI):
 def config_routes(app: FastAPI):
     static_path = config_value('STATIC_PATH')
     app.mount(static_path, StaticFiles(directory='static'), name='static')
-    for view in (home, courses, account):
+    for view in (home, courses, account, extlogin):
         app.include_router(view.router)
     print("[+] ...routes configured")
 #:

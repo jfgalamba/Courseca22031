@@ -1,5 +1,3 @@
-import enum
-
 from sqlalchemy import (
     CheckConstraint,
     Column,

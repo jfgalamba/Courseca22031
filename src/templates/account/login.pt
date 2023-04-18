@@ -45,10 +45,9 @@
 
                                             <__repeat__ tal:repeat="provider external_auth_providers" tal:omit-tag="True">
                                                 <p class="text-center text-muted mt-5 mb-0">
-                                                    <a href="/account/extlogin/start/${provider.id}"
-                                                        class="fw-bold text-body"><u>Login with Google</u></a></p>
+                                                    <a href="/extlogin/start/${provider.id}"
+                                                        class="fw-bold text-body"><u>Login with ${provider.name}</u></a></p>
                                             </__repeat__>
-
                                         </form>
                                     </div>
                                 </div>

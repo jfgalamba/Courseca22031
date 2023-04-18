@@ -109,7 +109,7 @@ class Development(Config):
 
     GOOGLE_CLIENT_ID = '265995230960-fo60c2og6lrpqpm05aimk6c2q6a08vco.apps.googleusercontent.com'
     GOOGLE_CLIENT_SECRET = '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'
-    GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/account/extlogin/continue'
+    GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/extlogin/continue'
 #:
 
 class Production(Config):

@@ -65,7 +65,8 @@ is_valid_password = make_test_regex_fn(
 )
 
 def is_valid_name(name: str) -> bool:
-    return all(part.isalpha() and len(part) > 2 for part in name.split())
+    parts = name.split()
+    return len(parts) >= 2 and all(part.isalpha() and len(part) >= 2 for part in parts)
 #:
 
 def is_valid_iso_date(iso_date: str) -> bool:
@@ -91,7 +92,8 @@ KeyFunction = Callable[[Any], Any]
 def find_first(
         iterable: Iterable,
         item: Any, 
-        *, key: KeyFunction = lambda x: x,
+        *, 
+        key: KeyFunction = lambda x: x,
 ) -> Any | None:
     return next((obj for obj in iterable if key(obj) == item), None)
 #:
