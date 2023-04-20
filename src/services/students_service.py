@@ -20,7 +20,7 @@ from services.users_service import (
     authenticate_user_by_email_addr as authenticate_student_by_email,
     password_matches as student_password_matches,
     add_external_login as add_student_external_login,
-    # ExternalProvider as ExternalProvider,
+    add_profile_image as add_student_profile_image,
     InvalidUserAttribute,
 )
 from common.common import (
@@ -41,6 +41,8 @@ __all__ = (
     'get_student_by_external_id',
     'authenticate_student_by_email',
     'student_password_matches',
+    'add_student_external_login',
+    'add_student_profile_image',
     'create_testimonial',
     'get_testimonials',
     'is_enrolled_in_course',
@@ -153,24 +155,6 @@ def ensure_student(
     assert isinstance(student, Student)
     return student
 #:
-
-# def ensure_student(
-#         student_or_id: Student | int,
-#         db_session: Session | None = None, 
-# ) -> Student:
-#     with database_session(db_session) as db_session:
-#         if isinstance(student_or_id, Student):
-#             student =  student_or_id
-#         else:
-#             if not (student := get_student_by_id(student_or_id, db_session)):
-#                 raise ValueError(f'Invalid id {id}.')
-
-#             if not isinstance(student, Student):
-#                 msg = (f'Invalid type for user {student_or_id}: expecting'
-#                     f'{Student.__name__} but got {type(student)}')
-#                 raise TypeError(msg)
-#         return student
-# #:
 
 def create_testimonial(
         user_id: int,

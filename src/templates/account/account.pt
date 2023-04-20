@@ -4,6 +4,10 @@
         <link rel="stylesheet" href="/static/assets/css/account.css">
     </__css_scripts__>
 
+    <__js_modules__ metal:fill-slot="additional_js_modules" tal:omit-tag="True">
+        <script type="module" src="/static/assets/js/account.js" defer></script>
+    </__js_modules__>
+
     <__content__ metal:fill-slot="content" tal:omit-tag="True">
 
         <main id="main" class="account-main">
@@ -16,7 +20,7 @@
                                     <div class="card-body p-5">
                                         <h2 class="text-uppercase text-center mb-5">Alterar Dados da Conta</h2>
 
-                                        <form action="/account" method="POST" class="account-form">
+                                        <form action="/account" method="POST" class="account-form" enctype="multipart/form-data">
 
                                             <div class="form-outline mb-4">
                                                 <input type="text" name="name" class="form-control form-control-md" required
@@ -57,6 +61,17 @@
                                                     </__repeat__>
                                                 </select>
                                                 <label class="form-label" for="country">País</label>
+                                            </div>
+
+                                            <div class="form-outline mb-4">
+                                                <input type="text" id="profile_image_helper" 
+                                                        placeholder="${choose_file_msg}" 
+                                                        class="form-control form-control-sm"
+                                                        >
+                                                <label class="form-label" for="zip_code">Imagem de Perfil</label>
+                                                <input type="file" style="display:none;" accept=".jpg, .png, .gif"
+                                                        id="profile_image" name="profile_image">
+                                                        <!-- onchange="document.getElementById('profile_image_helper').value = document.getElementById('profile_image').value.replace('C:\\fakepath\\', '')"> -->
                                             </div>
 
                                             <div class="form-outline mb-4">

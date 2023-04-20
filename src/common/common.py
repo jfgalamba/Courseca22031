@@ -9,6 +9,7 @@ __all__ = (
     'snake_to_camel_case',
     'snake_to_pascal_case',
     'find_first',
+    'find_first_if',
     'all_except',
     'random_str',
 )
@@ -85,6 +86,7 @@ def is_valid_iso_date(iso_date: str) -> bool:
 ################################################################################
 
 KeyFunction = Callable[[Any], Any]
+Predicate = Callable[[Any], bool]
 # 2023.04.11: pyright can't infer that key is a generic lambda
 # (apparently, it infers that it's a strange type of lambda that will
 # never match the type of the argument lambda)
@@ -104,6 +106,13 @@ def find_first(
 #             return obj
 #     return None
 # #:
+
+def find_first_if(
+        iterable: Iterable,
+        predicate: Predicate, 
+) -> Any | None:
+    return next((obj for obj in iterable if predicate(obj)), None)
+#:
 
 def all_except(
         iterable: Iterable,

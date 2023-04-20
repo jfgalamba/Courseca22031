@@ -37,9 +37,12 @@
   
     <!-- Template Main JS File -->
     <script src="/static/assets/js/main.js" defer></script>
-  
+
     <__css_scripts__ metal:define-slot="additional_css" tal:omit-tag="True">
     </__css_scripts__>
+
+    <__js_modules__ metal:define-slot="additional_js_modules" tal:omit-tag="True">
+    </__js_modules__>
 
 </head>
 

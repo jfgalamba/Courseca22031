@@ -31,10 +31,6 @@ SESSION_COOKIE_SAMESITE = config_value('SESSION_COOKIE_SAMESITE')
 SESSION_COOKIE_MAX_AGE = config_value('SESSION_COOKIE_MAX_AGE')
 SESSION_ID_LEN = 64   # in chars
 
-# SESSION_COOKIE_MAX_AGE = 86400_00    # in seconds (~100 days)
-# SESSION_COOKIE_MAX_AGE = 30    # in seconds
-
-
 # NOTE: These classes won't be suffixed with 'Exception' or 'Error',
 # because they aren't necessarily exceptions/errors. They are used for
 # control flow. Yes, exceptions shouldn't be used for this, but there's

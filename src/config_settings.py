@@ -70,6 +70,7 @@ class Config:
     STATIC_PATH = '/static'
     IMAGES_URL = f'{STATIC_PATH}/assets/img'
     INSTRUCTORS_IMAGES_URL = f'{IMAGES_URL}/instructors'
+    STUDENTS_IMAGES_URL = f'{IMAGES_URL}/students'
     COURSES_IMAGES_URL = f'{IMAGES_URL}/courses'
 
     TEMPLATES_PATH = './templates'
@@ -96,7 +97,7 @@ class Development(Config):
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = False
     SESSION_COOKIE_SAMESITE = 'lax'
-    PERMANENT_SESSION_LIFETIME = 60
+    SESSION_COOKIE_MAX_AGE = 300
 
     DATABASE_PROVIDER = 'SQLite'
     DATABASE = 'data/courseca.db'
@@ -122,7 +123,7 @@ class Production(Config):
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = 'lax'
-    PERMANENT_SESSION_LIFETIME = 86400_0  # in seconds (~10 days)
+    SESSION_COOKIE_MAX_AGE = 86400_0  # in seconds (~10 days)
 
     # DATABASE = 'MySQL'
     # DATABASE = 'Courseca'

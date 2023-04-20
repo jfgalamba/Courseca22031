@@ -1,17 +1,20 @@
+from contextvars import ContextVar
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator
+
+from fastapi import FastAPI, Request
+from fastapi import UploadFile
+from fastapi.datastructures import FormData
+from starlette.datastructures import UploadFile as StarletteUploadFile
+
+
 __all__ = (
     'global_request',
     'add_global_request_middleware',
     'form_field_as_str',
     'form_field_as_file',
+    'upload_file_closing',
 )
-
-
-from contextvars import ContextVar
-from typing import Any
-
-from fastapi import FastAPI, Request
-from fastapi import UploadFile
-from fastapi.datastructures import FormData
 
 
 global_request : ContextVar[Request] = ContextVar("global_request")
@@ -33,9 +36,20 @@ def form_field_as_str(form_data: FormData, field_name: str) -> str:
     raise TypeError(f'Form field {field_name} type is not str')
 #:
 
-def form_field_as_file(form_data: FormData, field_name: str) -> UploadFile:
+def form_field_as_file(form_data: FormData, field_name: str) -> StarletteUploadFile:
     field_value = form_data[field_name]
-    if isinstance(field_value, UploadFile):
+    if isinstance(field_value, StarletteUploadFile):
         return field_value
-    raise TypeError(f'Form field {field_name} type is not UploadFile')
+    err_msg = f'Form field {field_name} type is not {StarletteUploadFile.__name__}'
+    raise TypeError(err_msg)
+#:
+
+@asynccontextmanager
+async def upload_file_closing(
+    file_obj: UploadFile | StarletteUploadFile
+) -> AsyncGenerator[UploadFile | StarletteUploadFile, None]:
+    try:
+        yield file_obj
+    finally:
+        await file_obj.close()
 #:

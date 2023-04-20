@@ -28,7 +28,11 @@ from common.auth import (
     requires_unauthentication,
     remove_current_user,
 )
-from common.fastapi_utils import form_field_as_str
+from common.fastapi_utils import (
+    form_field_as_str,
+    form_field_as_file,
+    upload_file_closing,
+)
 from common.common import (
     is_valid_name,
     is_valid_email,
@@ -38,7 +42,6 @@ from common.common import (
     find_first,
     all_except,
 )
-
 
 ################################################################################
 ##
@@ -197,6 +200,7 @@ def account_viewmodel() -> ViewModel:
         address_line_maxlength = ADDRESS_LINE_SIZE,
         zip_code = coalesce(student.zip_code, ''),
         zip_code_maxlength = ZIP_CODE_SIZE,
+        choose_file_msg = "Seleccionar ficheiro",
         **country_viewmodel_info(country_iso_code),
     )
 #:
@@ -229,7 +233,6 @@ async def update_account_viewmodel(request: Request):
     form_data = await request.form()
 
     country_iso_code = form_field_as_str(form_data, 'country_iso_code')
-
     vm = ViewModel(
         error_msg = '',
         name = student.fullname,
@@ -239,6 +242,7 @@ async def update_account_viewmodel(request: Request):
         address_line_maxlength = ADDRESS_LINE_SIZE,
         zip_code = form_field_as_str(form_data, 'zip_code').strip(),
         zip_code_maxlength = ZIP_CODE_SIZE,
+        choose_file_msg = "Seleccionar ficheiro",
         **country_viewmodel_info(country_iso_code),
     )
 
@@ -278,6 +282,17 @@ async def update_account_viewmodel(request: Request):
             new_zip_code,
             new_country_iso_code,
         )
+
+        if file := form_field_as_file(form_data, 'profile_image'):
+            async with upload_file_closing(file) as file_cm:
+                if not file_cm.content_type:
+                    raise ValueError(f"No content type for uploaded file {file.filename}")
+
+                await sserv.add_student_profile_image(
+                   student.user_id,    # type: ignore
+                   file_cm,
+                   content_type = file_cm.content_type,
+                )
     return vm
 #:
 
@@ -361,8 +376,8 @@ async def post_login_viewmodel(request: Request) -> ViewModel:
 #:
 
 def exec_login(user_id: int) -> Response:
-    response = responses.RedirectResponse(url = '/', status_code = status.HTTP_302_FOUND)
     set_current_user(user_id)
+    response = responses.RedirectResponse(url = '/', status_code = status.HTTP_302_FOUND)
     return response
 #:
 

@@ -1,6 +1,9 @@
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+import aiofiles
+
+
 # https://passlib.readthedocs.io/en/stable/narr/quickstart.html
 # https://passlib.readthedocs.io/en/stable/lib/passlib.hash.pbkdf2_digest.html#passlib.hash.pbkdf2_sha512
 # https://passlib.readthedocs.io/en/stable/lib/passlib.ifc.html#passlib.ifc.PasswordHash.hash
@@ -19,6 +22,7 @@ from common.common import (
     is_valid_email,
     find_first,
 )
+from config_settings import conf
 
 
 __all__ = (
@@ -35,6 +39,14 @@ __all__ = (
     'DEFAULT_HASH_ALGO',
 )
 
+
+STUDENTS_IMAGES_URL = conf("STUDENTS_IMAGES_URL")
+
+IMAGE_CONTENT_TYPE_TO_EXTENSION = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/gif': 'gif'
+}
 
 KNOWN_HASHERS = {
     HashAlgoEnum.PBKDF2_SHA256: passlib_hash.pbkdf2_sha256,
@@ -173,5 +185,33 @@ def ensure_user_is(
                 msg = (f'Invalid type for user {user.user_id}: expecting'
                     f'{concrete_user_type.__name__} but got {type(user).__name__}')
                 raise TypeError(msg)
+        return user
+#:
+
+async def add_profile_image(
+        user_or_id: UserAccount | int, 
+        image_async_file,
+        extension: str = '',
+        content_type: str = '',
+        db_session: Session | None = None
+) -> UserAccount:
+    with database_session(db_session) as db_session:
+        user = ensure_user_is(user_or_id, UserAccount, db_session)
+
+        if not (extension or content_type):
+            raise ValueError('No extension or content type were given')
+
+        extension = (
+            extension if extension else 
+            IMAGE_CONTENT_TYPE_TO_EXTENSION.get(content_type, '')
+        )
+        image_file_path = f"./{STUDENTS_IMAGES_URL}/{user.user_id}.{extension}"
+
+        async with aiofiles.open(image_file_path, "wb") as out_file:
+            await out_file.write(await image_async_file.read())
+
+        user.profile_image_url = image_file_path   # type: ignore
+        db_session.commit()
+        db_session.refresh(user)
         return user
 #:
